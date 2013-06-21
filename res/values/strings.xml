@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">LightsOn</string>
+    <string name="action_settings">Settings</string>
+    <string name="advertencia">Remember: Prolonged use of light can quickly drain your device\'s battery</string>
+    <string name="intermittent">Intermittent</string>
+
+</resources>
