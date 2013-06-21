@@ -91,6 +91,9 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				if(!lightint) {
 				}
+				else {
+					
+				}
 			}
 		});
 		EasyTracker.getInstance().activityStart(this);
