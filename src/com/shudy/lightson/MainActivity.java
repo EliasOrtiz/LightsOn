@@ -137,6 +137,7 @@ public class MainActivity extends Activity {
 		public Boolean doInBackground(Void... params) {
 			
 			try{
+				
 				Thread.sleep(250);
 				//S
 				ligthOn();
