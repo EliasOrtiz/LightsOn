@@ -36,7 +36,7 @@ public final class R {
         public static final int Button1=0x7f090000;
         public static final int action_settings=0x7f090003;
         public static final int textview1=0x7f090001;
-        public static final int toggleIntermitent=0x7f090002;
+        public static final int toggleSos=0x7f090002;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -53,6 +53,7 @@ public final class R {
          */
         public static final int ga_trackingId=0x7f040000;
         public static final int intermittent=0x7f040005;
+        public static final int sos=0x7f040006;
     }
     public static final class style {
         /** 

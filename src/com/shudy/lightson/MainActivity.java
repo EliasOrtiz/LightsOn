@@ -1,28 +1,27 @@
 package com.shudy.lightson;
 
-import com.google.analytics.tracking.android.EasyTracker;
-
+import android.app.Activity;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.app.Activity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
+
+import com.google.analytics.tracking.android.EasyTracker;
 
 public class MainActivity extends Activity {
 	
 	private boolean lighton;
-	private boolean lightint;
+	private boolean lightsos;
 	
 	private ImageButton button;
-	private ToggleButton intermittent;
+	private Button but_sos;
 	private Camera camera;
 	private Parameters params;
 	private TextView textView;
@@ -35,11 +34,11 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		button = (ImageButton)findViewById(R.id.Button1);
-		intermittent = (ToggleButton)findViewById(R.id.toggleIntermitent);
+		but_sos = (Button)findViewById(R.id.toggleSos);
 		textView = (TextView)findViewById(R.id.textview1);
 		textView.setVisibility(View.INVISIBLE);
 		lighton = false;
-		lightint = false;
+		lightsos = false;
 		
 		try {
 			camera = Camera.open();
@@ -53,8 +52,8 @@ public class MainActivity extends Activity {
 			public void run() {
 				
 				params.setFlashMode(Parameters.FLASH_MODE_TORCH);
-				
-				
+				camera.setParameters(params);
+				camera.startPreview();
 			}
 		};
 		
@@ -62,7 +61,9 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void run() {
-				params.setFlashMode(Parameters.FLASH_MODE_OFF);				
+				params.setFlashMode(Parameters.FLASH_MODE_OFF);
+				camera.setParameters(params);
+				camera.startPreview();
 			}
 		};
 		
@@ -85,15 +86,18 @@ public class MainActivity extends Activity {
 				camera.startPreview();
 			}
 		});
-		intermittent.setOnClickListener(new OnClickListener() {
+		but_sos.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				if(!lightint) {
+				SosAsyntask sos = new SosAsyntask();
+				sos.execute();
+				if(!lightsos) {
 				}
 				else {
 					
 				}
+				lightsos = !lightsos;
 			}
 		});
 		EasyTracker.getInstance().activityStart(this);
@@ -112,6 +116,88 @@ public class MainActivity extends Activity {
 		}
 		super.onStop();
 		EasyTracker.getInstance().activityStop	(this);
+	}
+	
+	
+	public void ligthOn() {
+		params.setFlashMode(Parameters.FLASH_MODE_TORCH);
+		camera.setParameters(params);
+		camera.startPreview();
+	}
+	
+	public void ligthOff() {
+		params.setFlashMode(Parameters.FLASH_MODE_OFF);
+		camera.setParameters(params);
+		camera.startPreview();
+	}
+	
+	private class SosAsyntask extends AsyncTask<Void, Void, Boolean> {
+		
+		@Override
+		public Boolean doInBackground(Void... params) {
+			
+			try{
+				Thread.sleep(250);
+				//S
+				ligthOn();
+				Thread.sleep(250);
+				ligthOff();
+				Thread.sleep(500);
+				
+				ligthOn();
+				Thread.sleep(250);
+				ligthOff();
+				Thread.sleep(500);
+				
+				ligthOn();
+				Thread.sleep(250);
+				ligthOff();
+				Thread.sleep(500);
+				
+				//O
+				ligthOn();
+				Thread.sleep(1000);
+				ligthOff();
+				Thread.sleep(500);
+				
+				ligthOn();
+				Thread.sleep(1000);
+				ligthOff();
+				Thread.sleep(500);
+				
+				ligthOn();
+				Thread.sleep(1000);
+				ligthOff();
+				Thread.sleep(500);
+				//S
+				ligthOn();
+				Thread.sleep(250);
+				ligthOff();
+				Thread.sleep(500);
+				
+				ligthOn();
+				Thread.sleep(250);
+				ligthOff();
+				Thread.sleep(500);
+				
+				ligthOn();
+				Thread.sleep(250);
+				ligthOff();
+				Thread.sleep(500);
+				
+			}catch(Exception e){
+			 return false;		
+			}
+			
+			return true;
+		}
+
+		@Override
+		public void onPostExecute(Boolean hasLoggedAccount) {
+			if (hasLoggedAccount) {
+			} else {
+			}
+		}
 	}
 	
 }
