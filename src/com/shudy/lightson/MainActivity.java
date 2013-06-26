@@ -1,18 +1,25 @@
 package com.shudy.lightson;
 
 import android.app.Activity;
+import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.ads.AdRequest;
+import com.google.ads.AdSize;
+import com.google.ads.AdView;
 import com.google.analytics.tracking.android.EasyTracker;
 
 public class MainActivity extends Activity {
@@ -27,11 +34,31 @@ public class MainActivity extends Activity {
 	private TextView textView;
 	private Runnable runable_on;
 	private Runnable runable_off;
+	private Context context;
+
+	
+	//admob
+	private AdView ad;
+	private AdRequest adRequest;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		context = this;
+		
+		
+		ad = new AdView(this,AdSize.BANNER, "a151cac0b8cb6c2");
+		LinearLayout layout_publi = (LinearLayout)findViewById(R.id.LayoutPubli);
+		layout_publi.addView(ad);
+		
+		//ADMOB
+		adRequest = new AdRequest();	
+		
+		setTestMode(true);
+		ad.loadAd(adRequest);
+		
+		
 		
 		button = (ImageButton)findViewById(R.id.Button1);
 		but_sos = (Button)findViewById(R.id.toggleSos);
@@ -46,19 +73,16 @@ public class MainActivity extends Activity {
 		}catch(Exception e) {
 		}
 		
-		runable_on = new Runnable() {
-			
+		runable_on = new Runnable() {			
 			@Override
-			public void run() {
-				
+			public void run() {				
 				params.setFlashMode(Parameters.FLASH_MODE_TORCH);
 				camera.setParameters(params);
 				camera.startPreview();
 			}
 		};
 		
-		runable_off = new Runnable() {
-			
+		runable_off = new Runnable() {			
 			@Override
 			public void run() {
 				params.setFlashMode(Parameters.FLASH_MODE_OFF);
@@ -103,6 +127,16 @@ public class MainActivity extends Activity {
 		EasyTracker.getInstance().activityStart(this);
 	}
 
+private void setTestMode(boolean test) {
+	
+	if(test) {
+		adRequest.addTestDevice(AdRequest.TEST_EMULATOR);
+		adRequest.addTestDevice("6D7C0138CC30E340358299979DDD11B9"); //GALAXY S3 --Elías
+	}
+	
+		
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -119,6 +153,12 @@ public class MainActivity extends Activity {
 	}
 	
 	
+	@Override
+	protected void onDestroy() {
+		ad.destroy();
+		super.onDestroy();
+	}
+
 	public void ligthOn() {
 		params.setFlashMode(Parameters.FLASH_MODE_TORCH);
 		camera.setParameters(params);
@@ -137,6 +177,9 @@ public class MainActivity extends Activity {
 		public Boolean doInBackground(Void... params) {
 			
 			try{
+				
+				
+				Thread.sleep(250);
 				
 				Thread.sleep(250);
 				//S
