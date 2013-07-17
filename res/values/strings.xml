@@ -6,5 +6,6 @@
     <string name="advertencia">Remember: Prolonged use of light can quickly drain your device\'s battery</string>
     <string name="intermittent">Intermittent</string>
     <string name="sos">S.O.S.</string>
+    <string name="screen_rotation">Screen Rotation</string>
 
 </resources>

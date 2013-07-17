@@ -23,14 +23,6 @@
         android:scaleType="centerCrop"
         android:src="@drawable/anillos" />
 
-    <Button
-        android1:id="@+id/toggleSos"
-        android1:layout_width="wrap_content"
-        android1:layout_height="wrap_content"
-        android1:layout_alignParentTop="true"
-        android1:layout_centerHorizontal="true"
-        android1:text="@string/sos" />
-
     <LinearLayout
         android1:id="@+id/LayoutPubli"
         android1:layout_width="wrap_content"
@@ -38,10 +30,8 @@
         android1:layout_alignParentBottom="true"
         android1:layout_centerHorizontal="true"
         android1:layout_marginBottom="17dp"
-        android1:orientation="vertical"       
- 		android:gravity="bottom" > 
-        
-              
+        android:gravity="bottom"
+        android1:orientation="vertical" >
     </LinearLayout>
 
     <TextView
@@ -53,5 +43,55 @@
         android1:text="@string/advertencia"
         android1:textAppearance="?android:attr/textAppearanceSmall" />
 
-</RelativeLayout>
-<!-- android:visibility="gone" -->
+    <LinearLayout
+        android1:id="@+id/linearLayout1"
+        android1:layout_width="match_parent"
+        android1:layout_height="wrap_content"
+        android1:layout_alignParentTop="true"
+        android1:layout_centerHorizontal="true"
+        android1:layout_marginTop="24dp" >
+
+        <TextView
+            android1:id="@+id/textView2"
+            android1:layout_width="wrap_content"
+            android1:layout_height="wrap_content"
+            android1:layout_weight="1.04"
+            android1:gravity="center"
+            android1:text="@string/sos"
+            android1:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android1:id="@+id/textView3"
+            android1:layout_width="wrap_content"
+            android1:layout_height="wrap_content"
+            android1:layout_gravity="center_vertical"
+            android1:layout_weight="0.34"
+            android1:gravity="center"
+            android1:text="@string/screen_rotation"
+            android1:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
+
+    <LinearLayout
+        android1:id="@+id/linearLayout2"
+        android1:layout_width="match_parent"
+        android1:layout_height="wrap_content"
+        android1:layout_below="@+id/linearLayout1"
+        android1:layout_centerHorizontal="true" >
+
+        <Button
+            android1:id="@+id/toggleSos"
+            android1:layout_width="wrap_content"
+            android1:layout_height="wrap_content"
+            android1:layout_weight="0.5"
+            android1:text="@string/sos" />
+
+        <ToggleButton
+            android1:id="@+id/but_screen_rotation"
+            android1:layout_width="wrap_content"
+            android1:layout_height="wrap_content"
+            android1:layout_gravity="center"
+            android1:layout_weight="0.5"
+            android1:text="ToggleButton" />
+    </LinearLayout>
+
+</RelativeLayout> <!-- android:visibility="gone" -->
