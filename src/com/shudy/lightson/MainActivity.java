@@ -1,10 +1,9 @@
 package com.shudy.lightson;
 
-import java.util.TooManyListenersException;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.os.AsyncTask;
@@ -25,8 +24,11 @@ import com.google.ads.AdSize;
 import com.google.ads.AdView;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.shudy.lightson.util.Constants;
+import com.shudy.lightson.util.SLog;
 
 public class MainActivity extends Activity {
+
+	private static final String CLASS_NAME = MainActivity.class.getSimpleName();
 
 	private boolean lighton;
 	private boolean lightsos;
@@ -48,17 +50,12 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		SLog.d(CLASS_NAME + "onCreate()");
 		setContentView(R.layout.activity_main);
 		findViews();
 
 		// ADMOB
-		
-		layout_publi.addView(ad);
-		
-		adRequest = new AdRequest();
-		setTestMode(true);
-		ad.loadAd(adRequest);
-		//END ADMOB
+		load_Add();
 
 		settings = getSharedPreferences(Constants.USER_PREFERENCES, 0);
 		lighton = false;
@@ -68,40 +65,51 @@ public class MainActivity extends Activity {
 			camera = Camera.open();
 			params = camera.getParameters();
 		} catch (Exception e) {
-			//"Error de camara
+			// "Error de camara
 		}
-		
-		textView.setVisibility(View.INVISIBLE);		
+
+		textView.setVisibility(View.INVISIBLE);
 		allowed_screen_rotation = settings.getBoolean(Constants.SCREEN_MOVE, true);
 		screenRotation();
-		
+
 		setListeners();
 		EasyTracker.getInstance().activityStart(this);
 	}
-	
+
+	private void load_Add() {
+		SLog.d(CLASS_NAME + "load_Add()");
+		layout_publi.addView(ad);
+		adRequest = new AdRequest();
+		setTestMode(true);
+		ad.loadAd(adRequest);
+	}
+
 	private void screenRotation() {
-		if(allowed_screen_rotation == true ) {
+		SLog.d(CLASS_NAME + "onScreenRotation()");
+		if (allowed_screen_rotation == true) {
 
 			but_rotation_screen.setChecked(true);
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-		}
-		else {
+		} else {
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		}
-		
+
 	}
-	
+
 	private void findViews() {
+		SLog.d(CLASS_NAME + "findViews()");
 		ad = new AdView(this, AdSize.BANNER, "a151cac0b8cb6c2");
 		layout_publi = (LinearLayout) findViewById(R.id.LayoutPubli);
 		button = (ImageButton) findViewById(R.id.Button1);
 		but_sos = (Button) findViewById(R.id.toggleSos);
 		textView = (TextView) findViewById(R.id.textview1);
 		but_rotation_screen = (ToggleButton) findViewById(R.id.but_screen_rotation);
-		
+
 	}
+
 	private void setListeners() {
-		
+		SLog.d(CLASS_NAME + "setListeners()");
+
 		button.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -119,74 +127,73 @@ public class MainActivity extends Activity {
 				camera.startPreview();
 			}
 		});
-		
+
 		but_sos.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
+				boolean last_state = allowed_screen_rotation;
 				textView.setVisibility(View.VISIBLE);
-				SosAsyntask sos = new SosAsyntask();
+				
+				SoS_Asyntask sos = new SoS_Asyntask();
 				sos.execute();
-				if (!lightsos) {
-				} else {
-
-				}
-				lightsos = !lightsos;
 			}
 		});
-		
+
 		but_rotation_screen.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
+
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				allowed_screen_rotation  = isChecked;
+				allowed_screen_rotation = isChecked;
 				screenRotation();
 			}
 		});
 	}
 
 	private void setTestMode(boolean test) {
+		SLog.d(CLASS_NAME + "setTestMode(), set to:" + test);
 
 		if (test) {
 			adRequest.addTestDevice(AdRequest.TEST_EMULATOR);
-			// GALAXY S3 --Elías
-			adRequest.addTestDevice("6D7C0138CC30E340358299979DDD11B9");
+			// GALAXY S3 -- Shudy
+			adRequest.addTestDevice(Constants.ADMOB_TESTDEVICE);
 		}
-
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		SLog.d(CLASS_NAME + "onCreateOptionsMenu()");
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
-	
 
 	@Override
 	protected void onPause() {
+		SLog.d(CLASS_NAME + "onPause()");
 		SharedPreferences.Editor editor = settings.edit();
-	    editor.putBoolean(Constants.SCREEN_MOVE, allowed_screen_rotation);
-	    editor.commit();
+		editor.putBoolean(Constants.SCREEN_MOVE, allowed_screen_rotation);
+		editor.commit();
 		super.onPause();
 	}
 
 	@Override
 	protected void onStop() {
+		SLog.d(CLASS_NAME + "onStop()");
 		if (camera != null) {
 			camera.release();
 		}
-		
+
 		SharedPreferences.Editor editor = settings.edit();
-	    editor.putBoolean(Constants.SCREEN_MOVE, allowed_screen_rotation);
-	    editor.commit();
-		
+		editor.putBoolean(Constants.SCREEN_MOVE, allowed_screen_rotation);
+		editor.commit();
+
 		super.onStop();
 		EasyTracker.getInstance().activityStop(this);
 	}
 
 	@Override
 	protected void onDestroy() {
+		SLog.d(CLASS_NAME + "onDestroy()");
 		ad.destroy();
 		super.onDestroy();
 	}
@@ -195,6 +202,7 @@ public class MainActivity extends Activity {
 	 * Lights On
 	 */
 	public void ligthOn() {
+		SLog.d(CLASS_NAME + "lightOn()");
 		params.setFlashMode(Parameters.FLASH_MODE_TORCH);
 		camera.setParameters(params);
 		camera.startPreview();
@@ -204,6 +212,7 @@ public class MainActivity extends Activity {
 	 * Lights Off
 	 */
 	public void ligthOff() {
+		SLog.d(CLASS_NAME + "lightOff()");
 		params.setFlashMode(Parameters.FLASH_MODE_OFF);
 		camera.setParameters(params);
 		camera.startPreview();
@@ -213,6 +222,7 @@ public class MainActivity extends Activity {
 	 * DASH
 	 */
 	public void dash() {
+		SLog.d(CLASS_NAME + "dash()");
 		try {
 			ligthOn();
 			Thread.sleep(750);
@@ -228,6 +238,7 @@ public class MainActivity extends Activity {
 	 * DOT
 	 */
 	public void dot() {
+		SLog.d(CLASS_NAME + "dot()");
 		try {
 			ligthOn();
 			Thread.sleep(250);
@@ -237,14 +248,21 @@ public class MainActivity extends Activity {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * SEND S.O.S.
 	 */
-	private class SosAsyntask extends AsyncTask<Void, Void, Boolean> {
+	private class SoS_Asyntask extends AsyncTask<Void, Void, Boolean> {
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			lockScreenOrientation();			
+		}
 
 		@Override
 		public Boolean doInBackground(Void... params) {
+			SLog.d(CLASS_NAME + "SoSAsyntask() -- doInBackGround");
 			try {
 				dot();
 				dot();
@@ -258,6 +276,7 @@ public class MainActivity extends Activity {
 				dot();
 				dot();
 			} catch (InterruptedException e) {
+				SLog.e(CLASS_NAME + "InterruptedException" + e.getMessage());
 				e.printStackTrace();
 				return false;
 			}
@@ -266,10 +285,22 @@ public class MainActivity extends Activity {
 
 		@Override
 		public void onPostExecute(Boolean correcto) {
+			SLog.d(CLASS_NAME + "SoSAsyntask() -- onPostExecute");
+			unlockScreenOrientation();
 			textView.setVisibility(View.INVISIBLE);
-			if (correcto) {
-			} else {
-			}
+		}
+		
+		private void lockScreenOrientation() {
+		    int currentOrientation = getResources().getConfiguration().orientation;
+		    if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
+		        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		    } else {
+		        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+		    }
+		}
+		 
+		private void unlockScreenOrientation() {
+		    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 		}
 	}
 }
