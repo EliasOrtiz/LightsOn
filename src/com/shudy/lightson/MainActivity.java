@@ -256,8 +256,8 @@ public class MainActivity extends Activity {
 		
 		@Override
 		protected void onPreExecute() {
+			// TODO Auto-generated method stub
 			super.onPreExecute();
-			lockScreenOrientation();			
 		}
 
 		@Override
@@ -286,7 +286,6 @@ public class MainActivity extends Activity {
 		@Override
 		public void onPostExecute(Boolean correcto) {
 			SLog.d(CLASS_NAME + "SoSAsyntask() -- onPostExecute");
-			unlockScreenOrientation();
 			textView.setVisibility(View.INVISIBLE);
 		}
 		
